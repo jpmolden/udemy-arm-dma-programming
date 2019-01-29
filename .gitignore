@@ -30,3 +30,6 @@
 
 # Debug files
 *.dSYM/
+
+# https://github.com/niekiran/DMAProgramming
+DMAProgramming-master.zip
