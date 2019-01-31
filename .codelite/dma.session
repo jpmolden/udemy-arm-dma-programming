@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Session Name="/home/jpmolden/Desktop/GitHub/udemy-arm-dma-programming/dma.workspace">
+  <int Value="0" Name="m_selectedTab"/>
+  <wxString Value="/home/jpmolden/Desktop/GitHub/udemy-arm-dma-programming/dma.workspace" Name="m_workspaceName"/>
+  <TabInfoArray Name="TabInfoArray">
+    <TabInfo>
+      <wxString Value="/home/jpmolden/Desktop/GitHub/udemy-arm-dma-programming/DMAProgramming-master/Code/KEIL-MDK-5/NUCLEO-F446RE/UART_RX_with_IT/Src/main.c" Name="FileName"/>
+      <int Value="29" Name="FirstVisibleLine"/>
+      <int Value="30" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+  </TabInfoArray>
+  <SerializedObject Name="m_breakpoints">
+    <long Value="0" Name="Count"/>
+  </SerializedObject>
+  <wxString Value="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.inc;*.mm;*.m;*.xrc" Name="m_findInFilesMask"/>
+</Session>
