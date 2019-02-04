@@ -7,6 +7,7 @@
 - [OpenSTM32][OpenSTM32_link]
 - [STM32CubeMX][STM32CubeMX_link]
 - [Eclipse for C/C++][EclipsePackages_link]
+- [ST-Link][ST-Link_link]
 
 
 > Hardware Used: [STM32L476G-DISCO][STM32L476G-DISCO_link]
@@ -21,6 +22,6 @@
 [STM32CubeMX_link]: https://www.st.com/en/development-tools/stm32cubemx.html
 [EclipsePackages_link]: https://www.eclipse.org/downloads/packages/
 [STM32L476G-DISCO_link]: https://www.digikey.com/product-detail/en/stmicroelectronics/STM32L476G-DISCO/497-15879-ND/5344355
-
+[ST-Link_link]: https://www.st.com/content/st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-utilities/stsw-link009.html
 
 
