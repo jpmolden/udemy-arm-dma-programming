@@ -36,6 +36,11 @@ From the block diagram:
 From the overview of the ABH Bus matrix the AHB2 Peripherals can be controlled by both DMA1 and DMA2:
 > ![Bus Matrix STM32L476](/img/STM32L476xx_BusMatrix.png)
 
+Types of Transfers:
+
+- M2M Transfers: occuring on the AHB bus (inc GPIO, USB OTG)
+- M2P Transfers: occuring over both AHB and APB bus (e.g UART, LCD)
+
 
 
 Generic instrucations for using DMA
@@ -53,9 +58,9 @@ Generic instrucations for using DMA
 [STM32CubeMX_link]: https://www.st.com/en/development-tools/stm32cubemx.html
 [EclipsePackages_link]: https://www.eclipse.org/downloads/packages/
 [STM32L476G-DISCO_link]: https://www.digikey.com/product-detail/en/stmicroelectronics/STM32L476G-DISCO/497-15879-ND/5344355
+[32L476GDISCOVERY_link]: https://www.st.com/en/evaluation-tools/32l476gdiscovery.html
 [ST-Link_link]: https://www.st.com/content/st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-utilities/stsw-link009.html
 [STM32L476xx_link]: https://www.st.com/content/ccc/resource/technical/document/datasheet/c5/ed/2f/60/aa/79/42/0b/DM00108832.pdf/files/DM00108832.pdf/jcr:content/translations/en.DM00108832.pdf
 [RM0351_link]: https://www.st.com/content/ccc/resource/technical/document/reference_manual/02/35/09/0c/4f/f7/40/03/DM00083560.pdf/files/DM00083560.pdf/jcr:content/translations/en.DM00083560.pdf
-[32L476GDISCOVERY_link]: https://www.st.com/en/evaluation-tools/32l476gdiscovery.html
 
 
