@@ -17,7 +17,7 @@ Projects:
 
 Project 1 - Simple UART transmission over a USB VCP(Virtual COM port) on press of button connected to PD0 GPIO (pull-up)
 
-![screen shot](../master/img/project1_terraterm.png)
+![screen shot](/img/project1_terraterm.png)
 
 
 
