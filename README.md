@@ -20,26 +20,36 @@ Projects:
 
 Project 1 - Simple UART transmission over a USB VCP(Virtual COM port) on press of button connected to PD0 GPIO (pull-up)
 
-![screen shot](/img/project1_terraterm.png)
+> ![screen shot](/img/project1_terraterm.png)
 
-##Project 2 - DMA (M2P)
+##Project 2 - Blinky LED's with DMA (M2P) using interrupts and callback functions
 
-Using DMA, read from SRAM1 write to LED's (GPIO B/E), toggle the LED's
+> Using DMA, toggle the LED(LD4) on PB2 using the GPIOB and interrupts
 
-From the block diagram:
+> Steps taken
+
+- Initialize the GPIO and DMA using the generated STMCubeMX functions MX\_GPIO\_Init() and MX\_DMA\_Init()
+- Register the DMA tranfer complere callback which was created, my\_Dma\_TC\_cb
+- Start the DMA HAL interupt transfer to set the GPIOB ODR(output data reg) using HAL\_DMA_Start\_IT(...)
+- wait
+- repeat with led\_data[1] (led's off)
+- wait and repeat transfers
+
+> From the block diagram:
 
 > ![Block Diagram STM32L476xx](/img/STM32L476xx_Block_Diagram.png)
 
 - LED (LD4) connected on PB2 to GPIO Port B over the AHB2 bus
 - LED (LD5) connected on PE8 to GPIO Port E over the AHB2 bus
 
-From the overview of the ABH Bus matrix the AHB2 Peripherals can be controlled by both DMA1 and DMA2:
+> From the overview of the ABH Bus matrix the AHB2 Peripherals can be controlled by both DMA1 and DMA2:
 > ![Bus Matrix STM32L476](/img/STM32L476xx_BusMatrix.png)
 
-Types of Transfers:
+> Types of Transfers:
 
 - M2M Transfers: occuring on the AHB bus (inc GPIO, USB OTG)
 - M2P Transfers: occuring over both AHB and APB bus (e.g UART, LCD)
+
 
 
 

@@ -62,8 +62,10 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-DMA_HandleTypeDef hdma_memtomem_dma2_channel1;
+
 /* USER CODE BEGIN PV */
+
+DMA_HandleTypeDef hdma_memtomem_dma2_channel1;
 uint8_t led_data[2] = { 0x00, 0xff };
 
 /* USER CODE END PV */
@@ -72,6 +74,9 @@ uint8_t led_data[2] = { 0x00, 0xff };
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
+
+static void my_Dma_TC_cb(DMA_HandleTypeDef *pHandle);
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -87,10 +92,7 @@ static void MX_DMA_Init(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-	
-// HAL_DMA_Start
-	
+  /* USER CODE BEGIN 1 */	
 	
   /* USER CODE END 1 */
 
@@ -116,31 +118,48 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	
 	int32_t current_ticks;
-
+	HAL_DMA_RegisterCallback(&hdma_memtomem_dma2_channel1, HAL_DMA_XFER_CPLT_CB_ID, &my_Dma_TC_cb);
+	
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
+  
+	while (1)
   {
-    /* USER CODE END WHILE */
-		HAL_DMA_Start(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[0], (uint32_t)&GPIOE->ODR, 1);
+	/* USER CODE END WHILE */	
+		
+	
+  /* USER CODE BEGIN 3 */	
+		
+/*  // Just using DMA without interrupts
+		HAL_DMA_Start(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[0], (uint32_t)&GPIOB->ODR, 1);
 
 		HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_channel1, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
 
 		current_ticks = HAL_GetTick();
 		while( (current_ticks + 1000) >= HAL_GetTick() );
 			
-		HAL_DMA_Start(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[1], (uint32_t)&GPIOE->ODR, 1);
+		HAL_DMA_Start(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[1], (uint32_t)&GPIOB->ODR, 1);
 		HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_channel1, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
 
 		current_ticks = HAL_GetTick();
 		while( (current_ticks + 1000) >= HAL_GetTick() );
+*/
+		HAL_DMA_Start_IT(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[0], (uint32_t)&GPIOB->ODR, 1);
 		
+		current_ticks = HAL_GetTick();
+		while( (current_ticks + 1000) >= HAL_GetTick() );
 		
-    /* USER CODE BEGIN 3 */
+		HAL_DMA_Start_IT(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[1], (uint32_t)&GPIOB->ODR, 1);
+		
+		current_ticks = HAL_GetTick();
+		while( (current_ticks + 1000) >= HAL_GetTick() );
+		
+    /* USER CODE END 3 */
+		
   }
-  /* USER CODE END 3 */
 }
 
 /**
@@ -215,6 +234,11 @@ static void MX_DMA_Init(void)
     Error_Handler( );
   }
 
+  /* DMA interrupt init */
+  /* DMA2_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel1_IRQn);
+
 }
 
 /**
@@ -244,7 +268,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(OTG_FS_VBUS_GPIO_Port, OTG_FS_VBUS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, OTG_FS_VBUS_Pin|GPIO_PIN_12, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GYRO_CS_GPIO_Port, GYRO_CS_Pin, GPIO_PIN_RESET);
@@ -324,12 +348,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF11_LCD;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LD_R_Pin */
-  GPIO_InitStruct.Pin = LD_R_Pin;
+  /*Configure GPIO pins : LD_R_Pin M3V3_REG_ON_Pin */
+  GPIO_InitStruct.Pin = LD_R_Pin|M3V3_REG_ON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(LD_R_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LD_G_Pin */
   GPIO_InitStruct.Pin = LD_G_Pin;
@@ -374,8 +398,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF11_LCD;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : OTG_FS_PowerSwitchOn_Pin OTG_FS_VBUS_Pin */
-  GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin|OTG_FS_VBUS_Pin;
+  /*Configure GPIO pins : OTG_FS_PowerSwitchOn_Pin OTG_FS_VBUS_Pin PC12 */
+  GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin|OTG_FS_VBUS_Pin|GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -418,13 +442,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GYRO_CS_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : M3V3_REG_ON_Pin */
-  GPIO_InitStruct.Pin = M3V3_REG_ON_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(M3V3_REG_ON_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : I2C1_SCL_Pin I2C1_SDA_Pin */
   GPIO_InitStruct.Pin = I2C1_SCL_Pin|I2C1_SDA_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
@@ -455,6 +472,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+static void my_Dma_TC_cb( DMA_HandleTypeDef *pHandle )
+{
+	
+	
+}
 
 /* USER CODE END 4 */
 
