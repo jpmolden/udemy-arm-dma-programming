@@ -64,6 +64,7 @@
 /* Private variables ---------------------------------------------------------*/
 DMA_HandleTypeDef hdma_memtomem_dma2_channel1;
 /* USER CODE BEGIN PV */
+uint8_t led_data[2] = { 0x00, 0xff };
 
 /* USER CODE END PV */
 
@@ -87,7 +88,10 @@ static void MX_DMA_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	
+// HAL_DMA_Start
+	
+	
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -110,6 +114,8 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   /* USER CODE BEGIN 2 */
+	
+	int32_t current_ticks;
 
   /* USER CODE END 2 */
 
@@ -118,7 +124,20 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+		HAL_DMA_Start(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[0], (uint32_t)&GPIOE->ODR, 1);
 
+		HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_channel1, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
+
+		current_ticks = HAL_GetTick();
+		while( (current_ticks + 1000) >= HAL_GetTick() );
+			
+		HAL_DMA_Start(&hdma_memtomem_dma2_channel1, (uint32_t)&led_data[1], (uint32_t)&GPIOE->ODR, 1);
+		HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_channel1, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
+
+		current_ticks = HAL_GetTick();
+		while( (current_ticks + 1000) >= HAL_GetTick() );
+		
+		
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
