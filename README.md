@@ -10,14 +10,54 @@
 - [ST-Link][ST-Link_link]
 
 > Hardware Used: [STM32L476G-DISCO][STM32L476G-DISCO_link]
-(32-Bit ARM® Cortex®-M4)
+(32-Bit ARM® Cortex®-M4).
+> Discovery Board Docs: [32L476GDISCOVERY][32L476GDISCOVERY_link].
+> H/W Datasheet: [STM32L476xx][STM32L476xx_link].
+> Reference Manual: [RM0351][RM0351_link]
 
 
 Projects:
 
 Project 1 - Simple UART transmission over a USB VCP(Virtual COM port) on press of button connected to PD0 GPIO (pull-up)
 
-![screen shot](/img/project1_terraterm.png)
+> ![screen shot](/img/project1_terraterm.png)
+
+##Project 2 - Blinky LED's with DMA (M2P) using interrupts and callback functions
+
+> Using DMA, toggle the LED(LD4) on PB2 using the GPIOB and interrupts
+
+> Steps taken
+
+- Initialize the GPIO and DMA using the generated STMCubeMX functions MX\_GPIO\_Init() and MX\_DMA\_Init()
+- Register the DMA tranfer complere callback which was created, my\_Dma\_TC\_cb
+- Start the DMA HAL interupt transfer to set the GPIOB ODR(output data reg) using HAL\_DMA_Start\_IT(...)
+- wait
+- repeat with led\_data[1] (led's off)
+- wait and repeat transfers
+
+> From the block diagram:
+
+> ![Block Diagram STM32L476xx](/img/STM32L476xx_Block_Diagram.png)
+
+- LED (LD4) connected on PB2 to GPIO Port B over the AHB2 bus
+- LED (LD5) connected on PE8 to GPIO Port E over the AHB2 bus
+
+> From the overview of the ABH Bus matrix the AHB2 Peripherals can be controlled by both DMA1 and DMA2:
+> ![Bus Matrix STM32L476](/img/STM32L476xx_BusMatrix.png)
+
+> Types of Transfers:
+
+- M2M Transfers: occuring on the AHB bus (inc GPIO, USB OTG)
+- M2P Transfers: occuring over both AHB and APB bus (e.g UART, LCD)
+
+
+
+
+Generic instrucations for using DMA
++ 1) Identify which DMAx controller to use
++ 2) Initialize the DMA
++ 3) Trigger the DMA (Automatic or manual trigger)
++ 4) Wait for TC(poll) or get the callback from the DMA driver(interrupt)
 
 
 
@@ -28,9 +68,9 @@ Project 1 - Simple UART transmission over a USB VCP(Virtual COM port) on press o
 [STM32CubeMX_link]: https://www.st.com/en/development-tools/stm32cubemx.html
 [EclipsePackages_link]: https://www.eclipse.org/downloads/packages/
 [STM32L476G-DISCO_link]: https://www.digikey.com/product-detail/en/stmicroelectronics/STM32L476G-DISCO/497-15879-ND/5344355
+[32L476GDISCOVERY_link]: https://www.st.com/en/evaluation-tools/32l476gdiscovery.html
 [ST-Link_link]: https://www.st.com/content/st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-utilities/stsw-link009.html
-
-
-
+[STM32L476xx_link]: https://www.st.com/content/ccc/resource/technical/document/datasheet/c5/ed/2f/60/aa/79/42/0b/DM00108832.pdf/files/DM00108832.pdf/jcr:content/translations/en.DM00108832.pdf
+[RM0351_link]: https://www.st.com/content/ccc/resource/technical/document/reference_manual/02/35/09/0c/4f/f7/40/03/DM00083560.pdf/files/DM00083560.pdf/jcr:content/translations/en.DM00083560.pdf
 
 
